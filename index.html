@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0d10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Sleep Log</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root {
+    --bg: #0b0d10;
+    --surface: #14171c;
+    --surface-2: #1b1f26;
+    --line: #262b33;
+    --text: #d6d9de;
+    --muted: #7b828d;
+    --faint: #4a5059;
+    --accent: #8fa3c7;
+    --green: #3f7d5a;
+    --green-text: #9fd3b1;
+    --amber: #8a6a2f;
+    --amber-text: #e0c089;
+    --red: #7a3a3a;
+    --red-text: #e4a3a3;
+    --grey: #2a2f37;
+  }
+  [hidden] { display: none !important; }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); }
+  body {
+    font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    padding: calc(env(safe-area-inset-top) + 14px) 16px calc(env(safe-area-inset-bottom) + 24px);
+    max-width: 520px; margin: 0 auto;
+    user-select: none;
+  }
+  button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+  header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  header h1 { font-size: 17px; font-weight: 600; margin: 0; letter-spacing: .2px; }
+  .clock { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 14px; }
+  .icon-btn { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; color: var(--muted); }
+  .icon-btn:active { background: var(--surface-2); }
+
+  /* Log buttons */
+  .log { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+  .log button {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    padding: 18px 12px 14px; text-align: left; min-height: 104px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    transition: transform .08s, background .15s;
+  }
+  .log button:active { transform: scale(.97); background: var(--surface-2); }
+  .log .lbl { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+  .log .val { font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: .3px; }
+  .log .val.empty { color: var(--faint); font-weight: 500; font-size: 17px; }
+  .log .sub { font-size: 12px; color: var(--faint); }
+
+  /* Toggle row */
+  .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .targets {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 12px 14px; margin-bottom: 16px;
+  }
+  .targets .t-title { font-size: 14px; }
+  .targets .t-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .switch { position: relative; width: 46px; height: 28px; flex: none; }
+  .switch input { opacity: 0; width: 0; height: 0; position: absolute; }
+  .switch span {
+    position: absolute; inset: 0; background: var(--grey); border-radius: 999px; transition: background .2s;
+  }
+  .switch span::after {
+    content: ""; position: absolute; left: 3px; top: 3px; width: 22px; height: 22px;
+    border-radius: 50%; background: #9aa1ab; transition: transform .2s, background .2s;
+  }
+  .switch input:checked + span { background: var(--green); }
+  .switch input:checked + span::after { transform: translateX(18px); background: #dfe7e2; }
+
+  /* Calendar */
+  .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .cal-head h2 { font-size: 16px; font-weight: 600; margin: 0; }
+  .dow, .grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
+  .dow div { text-align: center; font-size: 11px; color: var(--faint); padding-bottom: 4px; }
+  .day {
+    aspect-ratio: 1 / 1.18; border-radius: 10px; background: var(--surface);
+    border: 1px solid transparent; padding: 4px 3px 3px; display: flex; flex-direction: column;
+    align-items: center; font-variant-numeric: tabular-nums; overflow: hidden; min-width: 0;
+  }
+  .day.blank { background: transparent; }
+  .day .n { font-size: 11px; color: var(--muted); align-self: flex-start; padding-left: 3px; line-height: 1.1; }
+  .day .times { margin-top: auto; margin-bottom: auto; display: flex; flex-direction: column; align-items: center; gap: 1px; }
+  .day .t { font-size: 10.5px; line-height: 1.15; white-space: nowrap; }
+  .day .t.w { color: var(--text); }
+  .day .t.b { color: var(--accent); }
+  .day .t.miss { opacity: .75; text-decoration: underline dotted; text-underline-offset: 2px; }
+  .day.today { border-color: #4b5566; }
+  .day.future { opacity: .35; }
+  .day.c-green { background: color-mix(in srgb, var(--green) 55%, var(--surface)); }
+  .day.c-amber { background: color-mix(in srgb, var(--amber) 55%, var(--surface)); }
+  .day.c-red   { background: color-mix(in srgb, var(--red) 55%, var(--surface)); }
+  .day.c-grey  { background: var(--surface); }
+  .day.c-green .n, .day.c-amber .n, .day.c-red .n { color: var(--text); }
+  .day.c-green .t.b, .day.c-amber .t.b, .day.c-red .t.b { color: #c9d4ea; }
+
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 11.5px; color: var(--muted); margin: 10px 2px 0; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+  .key { font-size: 11.5px; color: var(--muted); margin: 10px 2px 0; display: flex; gap: 14px; }
+  .key b { font-weight: 500; }
+
+  /* Stats */
+  .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 16px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .stat .k { font-size: 11.5px; color: var(--muted); }
+  .stat .v { font-size: 19px; font-weight: 600; font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .stat .v small { font-size: 12px; color: var(--muted); font-weight: 400; }
+
+  /* Sheet */
+  .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.6); display: none; z-index: 10; }
+  .sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 11; max-width: 520px; margin: 0 auto;
+    background: var(--surface); border-top: 1px solid var(--line); border-radius: 18px 18px 0 0;
+    padding: 18px 16px calc(env(safe-area-inset-bottom) + 20px);
+    transform: translateY(105%); transition: transform .22s ease, visibility 0s .22s; visibility: hidden;
+  }
+  .open .scrim { display: block; }
+  .open .sheet { transform: none; visibility: visible; transition: transform .22s ease; }
+  .sheet h3 { margin: 0 0 14px; font-size: 16px; font-weight: 600; }
+  .field { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); gap: 10px; }
+  .field:last-of-type { border-bottom: 0; }
+  .field label { color: var(--muted); font-size: 14px; }
+  input[type=time], select {
+    background: var(--surface-2); color: var(--text); border: 1px solid var(--line); border-radius: 8px;
+    padding: 7px 9px; font: inherit; color-scheme: dark;
+  }
+  .actions { display: flex; gap: 8px; margin-top: 16px; }
+  .btn { flex: 1; padding: 12px; border-radius: 12px; background: var(--surface-2); border: 1px solid var(--line); font-size: 14px; }
+  .btn.primary { background: #2a3444; border-color: #3a475c; }
+  .btn.danger { color: var(--red-text); }
+  .note { font-size: 12px; color: var(--faint); margin-top: 12px; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom) + 24px); transform: translate(-50%, 20px);
+    background: #232a34; color: var(--text); padding: 10px 16px; border-radius: 999px; font-size: 14px;
+    opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; z-index: 20; white-space: nowrap;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Sleep Log</h1>
+  <div class="row">
+    <span class="clock" id="clock"></span>
+    <button class="icon-btn" id="settingsBtn" aria-label="Settings">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+    </button>
+  </div>
+</header>
+
+<section class="log">
+  <button id="wakeBtn">
+    <span class="lbl">☀︎ Woke up</span>
+    <span class="val" id="wakeVal"></span>
+    <span class="sub" id="wakeSub"></span>
+  </button>
+  <button id="bedBtn">
+    <span class="lbl">☾ Went to bed</span>
+    <span class="val" id="bedVal"></span>
+    <span class="sub" id="bedSub"></span>
+  </button>
+</section>
+
+<section class="targets">
+  <div class="row">
+    <div>
+      <div class="t-title">Show targets</div>
+      <div class="t-sub" id="targetSummary"></div>
+    </div>
+    <label class="switch"><input type="checkbox" id="targetToggle"><span></span></label>
+  </div>
+</section>
+
+<section>
+  <div class="cal-head">
+    <button class="icon-btn" id="prevM" aria-label="Previous month">‹</button>
+    <h2 id="monthLbl"></h2>
+    <button class="icon-btn" id="nextM" aria-label="Next month">›</button>
+  </div>
+  <div class="dow"><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div><div>S</div></div>
+  <div class="grid" id="grid"></div>
+  <div class="key"><span><b style="color:var(--text)">top</b> woke</span><span><b style="color:var(--accent)">bottom</b> bed</span><span id="missKey" hidden><u style="text-decoration-style:dotted">dotted</u> = outside window</span></div>
+  <div class="legend" id="legend" hidden>
+    <span><i style="background:var(--green)"></i>Both on time</span>
+    <span><i style="background:var(--amber)"></i>One slipped</span>
+    <span><i style="background:var(--red)"></i>Both slipped</span>
+    <span><i style="background:var(--grey)"></i>Incomplete</span>
+  </div>
+  <div class="stats" id="stats"></div>
+</section>
+
+<div id="sheetWrap">
+  <div class="scrim" id="scrim"></div>
+  <div class="sheet" id="sheet"></div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+  const KEY = 'sleeplog.v1';
+  const DEFAULTS = { wake: '04:00', bed: '20:00', windowMin: 60, showTargets: false };
+
+  // ---------- storage ----------
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) {
+        const d = JSON.parse(raw);
+        return { entries: d.entries || {}, settings: { ...DEFAULTS, ...(d.settings || {}) } };
+      }
+    } catch (e) {}
+    return { entries: {}, settings: { ...DEFAULTS } };
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { toast('Could not save on this device'); }
+  }
+  const state = load();
+  // entries: { 'YYYY-MM-DD': { wake: 'HH:MM', bed: 'HH:MM' } }
+  // A bed time belongs to the day you went to bed. Taps between 00:00 and 11:59 on
+  // the bed button count toward the previous day (you stayed up past midnight).
+
+  // ---------- date helpers ----------
+  const pad = n => String(n).padStart(2, '0');
+  const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const hm = d => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const toMin = s => { const [h, m] = s.split(':').map(Number); return h * 60 + m; };
+  const fmt = s => s; // 24h HH:MM
+  const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+
+  function bedDayFor(now) {
+    return now.getHours() < 12 ? addDays(now, -1) : now;
+  }
+  // circular distance in minutes on a 24h clock
+  function dist(a, b) { const d = Math.abs(toMin(a) - toMin(b)) % 1440; return Math.min(d, 1440 - d); }
+  function hit(kind, t) { return dist(t, state.settings[kind]) <= state.settings.windowMin; }
+
+  function status(e) {
+    if (!e || !e.wake || !e.bed) return 'grey';
+    const n = (hit('wake', e.wake) ? 1 : 0) + (hit('bed', e.bed) ? 1 : 0);
+    return n === 2 ? 'green' : n === 1 ? 'amber' : 'red';
+  }
+
+  // ---------- logging ----------
+  function logNow(kind) {
+    const now = new Date();
+    const day = kind === 'wake' ? now : bedDayFor(now);
+    const k = keyOf(day);
+    const t = hm(now);
+    const e = state.entries[k] || {};
+    if (e[kind]) {
+      const what = kind === 'wake' ? 'Wake' : 'Bed';
+      if (!confirm(`${what} time for ${prettyDate(day)} is already ${e[kind]}.\nReplace with ${t}?`)) return;
+    }
+    e[kind] = t;
+    state.entries[k] = e;
+    save();
+    if (navigator.vibrate) navigator.vibrate(18);
+    toast(kind === 'wake' ? `Good morning · ${t}` : `Good night · ${t}`);
+    view = new Date(day.getFullYear(), day.getMonth(), 1);
+    render();
+  }
+
+  // ---------- UI ----------
+  const $ = id => document.getElementById(id);
+  let view = new Date(); view = new Date(view.getFullYear(), view.getMonth(), 1);
+  const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const prettyDate = d => `${d.getDate()} ${MONTHS[d.getMonth()].slice(0,3)}`;
+
+  function renderButtons() {
+    const now = new Date();
+    const w = (state.entries[keyOf(now)] || {}).wake;
+    const bd = bedDayFor(now);
+    const b = (state.entries[keyOf(bd)] || {}).bed;
+    setVal('wake', w, 'today');
+    setVal('bed', b, now.getHours() < 12 ? 'last night' : 'tonight');
+  }
+  function setVal(kind, t, when) {
+    const v = $(kind + 'Val'), s = $(kind + 'Sub');
+    if (t) { v.textContent = fmt(t); v.className = 'val'; s.textContent = `logged ${when} · tap to redo`; }
+    else { v.textContent = 'Tap to log'; v.className = 'val empty'; s.textContent = `not logged ${when}`; }
+  }
+
+  function renderCalendar() {
+    const on = state.settings.showTargets;
+    $('monthLbl').textContent = `${MONTHS[view.getMonth()]} ${view.getFullYear()}`;
+    $('legend').hidden = !on;
+    $('missKey').hidden = !on;
+    const grid = $('grid'); grid.innerHTML = '';
+    const first = new Date(view);
+    const lead = (first.getDay() + 6) % 7; // Monday start
+    const days = new Date(view.getFullYear(), view.getMonth() + 1, 0).getDate();
+    const todayK = keyOf(new Date());
+    for (let i = 0; i < lead; i++) grid.appendChild(Object.assign(document.createElement('div'), { className: 'day blank' }));
+    for (let d = 1; d <= days; d++) {
+      const date = new Date(view.getFullYear(), view.getMonth(), d);
+      const k = keyOf(date);
+      const e = state.entries[k];
+      const el = document.createElement('button');
+      el.className = 'day';
+      if (k === todayK) el.classList.add('today');
+      if (k > todayK) el.classList.add('future');
+      if (on && e && (e.wake || e.bed)) el.classList.add('c-' + status(e));
+      let html = `<span class="n">${d}</span><span class="times">`;
+      if (e && e.wake) html += `<span class="t w${on && !hit('wake', e.wake) ? ' miss' : ''}">${fmt(e.wake)}</span>`;
+      if (e && e.bed) html += `<span class="t b${on && !hit('bed', e.bed) ? ' miss' : ''}">${fmt(e.bed)}</span>`;
+      html += '</span>';
+      el.innerHTML = html;
+      if (k <= todayK) el.onclick = () => openDay(date);
+      grid.appendChild(el);
+    }
+  }
+
+  function avgClock(list, pivot) {
+    // average times, unwrapping around a pivot so 23:30 and 00:30 average to 00:00
+    if (!list.length) return null;
+    const p = toMin(pivot);
+    const vals = list.map(t => { let m = toMin(t) - p; if (m > 720) m -= 1440; if (m < -720) m += 1440; return m; });
+    let avg = Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) + p;
+    avg = ((avg % 1440) + 1440) % 1440;
+    return `${pad(Math.floor(avg / 60))}:${pad(avg % 60)}`;
+  }
+
+  function renderStats() {
+    const on = state.settings.showTargets;
+    const y = view.getFullYear(), m = view.getMonth();
+    const prefix = `${y}-${pad(m + 1)}-`;
+    const month = Object.entries(state.entries).filter(([k]) => k.startsWith(prefix)).map(([, e]) => e);
+    const wakes = month.map(e => e.wake).filter(Boolean);
+    const beds = month.map(e => e.bed).filter(Boolean);
+    const logged = month.filter(e => e.wake || e.bed).length;
+    let cards = [
+      ['Avg wake', avgClock(wakes, state.settings.wake) || '—', `${wakes.length} logs`],
+      ['Avg bed', avgClock(beds, state.settings.bed) || '—', `${beds.length} logs`],
+    ];
+    if (on) {
+      const full = month.filter(e => e.wake && e.bed);
+      const green = full.filter(e => status(e) === 'green').length;
+      const wHit = wakes.filter(t => hit('wake', t)).length;
+      const bHit = beds.filter(t => hit('bed', t)).length;
+      cards.push(['On-target days', `${green}`, `of ${full.length} complete`]);
+      cards.push(['Current streak', `${streak()}`, 'green days']);
+      cards.push(['Wake on time', wakes.length ? `${Math.round(100 * wHit / wakes.length)}%` : '—', '']);
+      cards.push(['Bed on time', beds.length ? `${Math.round(100 * bHit / beds.length)}%` : '—', '']);
+    } else {
+      cards.push(['Days logged', `${logged}`, 'this month']);
+      cards.push(['Logging streak', `${logStreak()}`, 'days']);
+    }
+    $('stats').innerHTML = cards.map(([k, v, s]) => `<div class="stat"><div class="k">${k}</div><div class="v">${v} <small>${s}</small></div></div>`).join('');
+  }
+
+  function streak() {
+    // consecutive green days ending yesterday or today
+    let d = new Date(), n = 0;
+    if (status(state.entries[keyOf(d)]) !== 'green') d = addDays(d, -1);
+    while (status(state.entries[keyOf(d)]) === 'green') { n++; d = addDays(d, -1); }
+    return n;
+  }
+  function logStreak() {
+    let d = new Date(), n = 0;
+    const has = k => { const e = state.entries[k]; return e && (e.wake || e.bed); };
+    if (!has(keyOf(d))) d = addDays(d, -1);
+    while (has(keyOf(d))) { n++; d = addDays(d, -1); }
+    return n;
+  }
+
+  function renderTargets() {
+    const s = state.settings;
+    $('targetToggle').checked = s.showTargets;
+    const w = s.windowMin >= 60 ? `${s.windowMin / 60}h` : `${s.windowMin}m`;
+    $('targetSummary').textContent = `Wake ${s.wake} · Bed ${s.bed} · ±${w}`;
+  }
+
+  function render() { renderButtons(); renderTargets(); renderCalendar(); renderStats(); }
+
+  // ---------- sheets ----------
+  function openSheet(html) { $('sheet').innerHTML = html; document.body.classList.add('open'); }
+  function closeSheet() { document.body.classList.remove('open'); }
+  $('scrim').onclick = closeSheet;
+
+  function openDay(date) {
+    const k = keyOf(date);
+    const e = state.entries[k] || {};
+    openSheet(`
+      <h3>${date.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}</h3>
+      <div class="field"><label>Woke up</label><input type="time" id="dW" value="${e.wake || ''}"></div>
+      <div class="field"><label>Went to bed (that night)</label><input type="time" id="dB" value="${e.bed || ''}"></div>
+      <div class="actions">
+        <button class="btn danger" id="dClear">Clear day</button>
+        <button class="btn primary" id="dSave">Save</button>
+      </div>
+      <div class="note">For fixing a missed or mistaken tap. Leave a field empty to remove it.</div>`);
+    $('dSave').onclick = () => {
+      const w = $('dW').value, b = $('dB').value;
+      if (w || b) state.entries[k] = { ...(w && { wake: w }), ...(b && { bed: b }) };
+      else delete state.entries[k];
+      save(); closeSheet(); render(); toast('Saved');
+    };
+    $('dClear').onclick = () => {
+      if (!confirm('Remove both times for this day?')) return;
+      delete state.entries[k]; save(); closeSheet(); render(); toast('Cleared');
+    };
+  }
+
+  function openSettings() {
+    const s = state.settings;
+    const opts = [30, 45, 60, 90, 120].map(m => `<option value="${m}"${m === s.windowMin ? ' selected' : ''}>± ${m >= 60 ? m / 60 + ' h' : m + ' min'}</option>`).join('');
+    openSheet(`
+      <h3>Targets & data</h3>
+      <div class="field"><label>Target wake time</label><input type="time" id="sW" value="${s.wake}"></div>
+      <div class="field"><label>Target bed time</label><input type="time" id="sB" value="${s.bed}"></div>
+      <div class="field"><label>Counts as on time within</label><select id="sWin">${opts}</select></div>
+      <div class="actions"><button class="btn primary" id="sSave">Save targets</button></div>
+      <div class="actions">
+        <button class="btn" id="exp">Export backup</button>
+        <button class="btn" id="imp">Import backup</button>
+      </div>
+      <input type="file" id="impFile" accept="application/json,.json" hidden>
+      <div class="note">Your data lives only on this phone. Export a backup now and then — clearing browser data would erase it.</div>`);
+    $('sSave').onclick = () => {
+      s.wake = $('sW').value || s.wake; s.bed = $('sB').value || s.bed; s.windowMin = +$('sWin').value;
+      save(); closeSheet(); render(); toast('Targets updated');
+    };
+    $('exp').onclick = exportData;
+    $('imp').onclick = () => $('impFile').click();
+    $('impFile').onchange = ev => importData(ev.target.files[0]);
+  }
+
+  function exportData() {
+    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `sleeplog-backup-${keyOf(new Date())}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+  function importData(file) {
+    if (!file) return;
+    const r = new FileReader();
+    r.onload = () => {
+      try {
+        const d = JSON.parse(r.result);
+        if (!d.entries) throw 0;
+        if (!confirm(`Import ${Object.keys(d.entries).length} days? Days in the backup will overwrite matching days here.`)) return;
+        Object.assign(state.entries, d.entries);
+        if (d.settings) Object.assign(state.settings, d.settings);
+        save(); closeSheet(); render(); toast('Backup imported');
+      } catch (e) { toast('That file is not a Sleep Log backup'); }
+    };
+    r.readAsText(file);
+  }
+
+  // ---------- misc ----------
+  let tt;
+  function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 1800); }
+  function tick() { $('clock').textContent = hm(new Date()); }
+
+  $('wakeBtn').onclick = () => logNow('wake');
+  $('bedBtn').onclick = () => logNow('bed');
+  $('targetToggle').onchange = e => { state.settings.showTargets = e.target.checked; save(); render(); };
+  $('prevM').onclick = () => { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); };
+  $('nextM').onclick = () => { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); };
+  $('settingsBtn').onclick = openSettings;
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { tick(); render(); } });
+
+  tick(); setInterval(tick, 15000);
+  render();
+
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  }
+})();
+</script>
+</body>
+</html>
