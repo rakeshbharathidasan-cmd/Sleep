@@ -95,6 +95,8 @@
   .day .t { font-size: 10.5px; line-height: 1.15; white-space: nowrap; }
   .day .t.w { color: var(--text); }
   .day .t.b { color: var(--accent); }
+  .day .t.d { color: var(--green-text); font-size: 9.5px; opacity: .85; }
+  .sleepline { font-size: 13px; color: var(--green-text); margin: -4px 2px 12px; }
   .day .t.miss { opacity: .75; text-decoration: underline dotted; text-underline-offset: 2px; }
   .day.today { border-color: #4b5566; }
   .day.future { opacity: .35; }
@@ -192,7 +194,7 @@
   </div>
   <div class="dow"><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div><div>S</div></div>
   <div class="grid" id="grid"></div>
-  <div class="key"><span><b style="color:var(--text)">top</b> woke</span><span><b style="color:var(--accent)">bottom</b> bed</span><span id="missKey" hidden><u style="text-decoration-style:dotted">dotted</u> = outside window</span></div>
+  <div class="key"><span><b style="color:var(--text)">top</b> woke</span><span><b style="color:var(--accent)">then</b> bed</span><span><b style="color:var(--green-text)">green</b> hrs slept</span><span id="missKey" hidden><u style="text-decoration-style:dotted">dotted</u> = outside window</span></div>
   <div class="legend" id="legend" hidden>
     <span><i style="background:var(--green)"></i>Both on time</span>
     <span><i style="background:var(--amber)"></i>One slipped</span>
@@ -247,6 +249,19 @@
   function dist(a, b) { const d = Math.abs(toMin(a) - toMin(b)) % 1440; return Math.min(d, 1440 - d); }
   function hit(kind, t) { return dist(t, state.settings[kind]) <= state.settings.windowMin; }
 
+  // ---------- sleep duration ----------
+  // The night that ends on the morning of day D starts with the bed time logged for D-1
+  // (bed taps after midnight are already stored on D-1). Returns minutes, or null.
+  function sleepMin(d) {
+    const e = state.entries[keyOf(d)], p = state.entries[keyOf(addDays(d, -1))];
+    if (!e || !e.wake || !p || !p.bed) return null;
+    const bed = toMin(p.bed), wake = toMin(e.wake);
+    const mins = bed >= 720 ? wake + 1440 - bed : wake - bed; // bed before or after midnight
+    return mins >= 60 && mins <= 960 ? mins : null;            // ignore impossible pairs
+  }
+  const dur = m => `${Math.floor(m / 60)}h ${pad(m % 60)}m`;
+  const durShort = m => `${Math.floor(m / 60)}h${m % 60 ? pad(m % 60) : ''}`;
+
   function status(e) {
     if (!e || !e.wake || !e.bed) return 'grey';
     const n = (hit('wake', e.wake) ? 1 : 0) + (hit('bed', e.bed) ? 1 : 0);
@@ -268,7 +283,8 @@
     state.entries[k] = e;
     save();
     if (navigator.vibrate) navigator.vibrate(18);
-    toast(kind === 'wake' ? `Good morning · ${t}` : `Good night · ${t}`);
+    const sl = kind === 'wake' ? sleepMin(day) : null;
+    toast(kind === 'wake' ? `Good morning · ${t}${sl ? ` · slept ${dur(sl)}` : ''}` : `Good night · ${t}`);
     view = new Date(day.getFullYear(), day.getMonth(), 1);
     render();
   }
@@ -286,6 +302,8 @@
     const b = (state.entries[keyOf(bd)] || {}).bed;
     setVal('wake', w, 'today');
     setVal('bed', b, now.getHours() < 12 ? 'last night' : 'tonight');
+    const sl = w ? sleepMin(now) : null;
+    if (sl) $('wakeSub').textContent = `slept ${dur(sl)} · tap to redo`;
   }
   function setVal(kind, t, when) {
     const v = $(kind + 'Val'), s = $(kind + 'Sub');
@@ -316,6 +334,8 @@
       let html = `<span class="n">${d}</span><span class="times">`;
       if (e && e.wake) html += `<span class="t w${on && !hit('wake', e.wake) ? ' miss' : ''}">${fmt(e.wake)}</span>`;
       if (e && e.bed) html += `<span class="t b${on && !hit('bed', e.bed) ? ' miss' : ''}">${fmt(e.bed)}</span>`;
+      const sl = sleepMin(date);
+      if (sl) html += `<span class="t d">${durShort(sl)}</span>`;
       html += '</span>';
       el.innerHTML = html;
       if (k <= todayK) el.onclick = () => openDay(date);
@@ -341,7 +361,13 @@
     const wakes = month.map(e => e.wake).filter(Boolean);
     const beds = month.map(e => e.bed).filter(Boolean);
     const logged = month.filter(e => e.wake || e.bed).length;
+    const nights = [];
+    const dim = new Date(y, m + 1, 0).getDate();
+    for (let d = 1; d <= dim; d++) { const v = sleepMin(new Date(y, m, d)); if (v) nights.push(v); }
+    const total = nights.reduce((a, b) => a + b, 0);
     let cards = [
+      ['Avg sleep', nights.length ? dur(Math.round(total / nights.length)) : '—', `${nights.length} nights`],
+      ['Total sleep', nights.length ? `${Math.round(total / 6) / 10}h` : '—', 'this month'],
       ['Avg wake', avgClock(wakes, state.settings.wake) || '—', `${wakes.length} logs`],
       ['Avg bed', avgClock(beds, state.settings.bed) || '—', `${beds.length} logs`],
     ];
@@ -395,6 +421,7 @@
     const e = state.entries[k] || {};
     openSheet(`
       <h3>${date.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}</h3>
+      ${sleepMin(date) ? `<div class="sleepline">Slept ${dur(sleepMin(date))} the night before</div>` : ''}
       <div class="field"><label>Woke up</label><input type="time" id="dW" value="${e.wake || ''}"></div>
       <div class="field"><label>Went to bed (that night)</label><input type="time" id="dB" value="${e.bed || ''}"></div>
       <div class="actions">
