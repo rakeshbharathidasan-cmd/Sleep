@@ -149,6 +149,56 @@
     opacity: 0; transition: opacity .2s, transform .2s; pointer-events: none; z-index: 20; white-space: nowrap;
   }
   .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  /* ---------- page tabs ---------- */
+  .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 14px; }
+  .tabs button { padding: 9px; border-radius: 10px; font-size: 14px; color: var(--muted); font-weight: 500; }
+  .tabs button.on { background: var(--surface-2); color: var(--text); box-shadow: inset 0 0 0 1px #3a475c; }
+
+  /* ---------- sleep report ---------- */
+  .rcard { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px; margin-bottom: 12px; }
+  .rcard h4 { margin: 0 0 10px; font-size: 11.5px; font-weight: 600; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; display: flex; justify-content: space-between; gap: 8px; }
+  .rcard h4 span { text-transform: none; letter-spacing: 0; font-weight: 400; color: var(--faint); }
+  .rhero { background: radial-gradient(300px 280px at 25% 45%, color-mix(in srgb, var(--st) 14%, transparent), transparent 70%), var(--surface); border-color: color-mix(in srgb, var(--st) 30%, var(--line)); }
+  .hgrid { display: grid; grid-template-columns: minmax(0, 46%) minmax(0, 1fr); gap: 8px; align-items: center; }
+  .hgrid svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .sfill { transition: transform 1.3s cubic-bezier(.2,.9,.25,1); }
+  .swave1 { animation: swv 5s linear infinite; } .swave2 { animation: swv 8s linear infinite reverse; }
+  @keyframes swv { to { transform: translateX(-100px); } }
+  .zz { animation: zz 3s ease-in-out infinite; } .zz.b { animation-delay: 1s; }
+  @keyframes zz { 0% { opacity: 0; transform: translate(0, 6px); } 40% { opacity: .9; } 100% { opacity: 0; transform: translate(6px, -14px); } }
+  .ro .eb { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+  .ro .big { font-size: 40px; font-weight: 700; line-height: 1.05; margin-top: 4px; font-variant-numeric: tabular-nums; letter-spacing: -1px; }
+  .ro .big small { font-size: 17px; color: var(--muted); font-weight: 500; letter-spacing: 0; }
+  .ro .of { font-size: 12.5px; color: var(--muted); margin: 2px 0 9px; }
+  .spill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 8px; border-radius: 99px; font-size: 12.5px; font-weight: 600; color: var(--st); background: color-mix(in srgb, var(--st) 13%, transparent); border: 1px solid color-mix(in srgb, var(--st) 40%, transparent); }
+  .spill i { width: 7px; height: 7px; border-radius: 50%; background: var(--st); box-shadow: 0 0 8px var(--st); }
+  .facts { display: grid; gap: 6px; margin-top: 10px; }
+  .facts div { font-size: 12.5px; color: var(--muted); line-height: 1.35; }
+  .facts b { color: var(--text); font-weight: 600; font-variant-numeric: tabular-nums; }
+  .rib { margin-top: 12px; } .rib svg { width: 100%; height: auto; display: block; }
+  .counts { display: flex; flex-wrap: wrap; gap: 5px 12px; font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .counts span { display: inline-flex; align-items: center; gap: 5px; } .counts i { width: 9px; height: 9px; border-radius: 3px; }
+  .counts b { color: var(--text); font-weight: 600; }
+  .chipsr { display: flex; gap: 6px; margin-bottom: 12px; }
+  .chipsr button { flex: 1; padding: 8px 4px; border-radius: 99px; background: var(--surface); border: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+  .chipsr button.on { color: var(--text); border-color: #4b5566; background: var(--surface-2); }
+  .rchart svg { width: 100%; height: auto; display: block; }
+  .rleg { display: flex; flex-wrap: wrap; gap: 5px 12px; font-size: 11.5px; color: var(--muted); margin-top: 8px; }
+  .rleg span { display: inline-flex; align-items: center; gap: 5px; } .rleg i { width: 10px; height: 10px; border-radius: 3px; }
+  .rcap { font-size: 12.5px; color: var(--muted); margin-top: 8px; line-height: 1.4; } .rcap b { color: var(--text); font-weight: 600; }
+  .tblw { overflow-x: auto; margin: 0 -4px; }
+  .stbl { width: 100%; border-collapse: collapse; font-size: 13px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .stbl th { font-size: 10.5px; color: var(--faint); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; text-align: right; padding: 6px 5px; border-bottom: 1px solid #343a44; }
+  .stbl td { text-align: right; padding: 8px 4px; border-bottom: 1px solid var(--line); }
+  .stbl th:nth-child(-n+3), .stbl td:nth-child(-n+3) { text-align: left; }
+  .stbl td.sn { color: var(--faint); }
+  .stbl td.dur { font-weight: 600; }
+  .stbl td.dur i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; }
+  .stbl tr.avg td { border-top: 1px solid #343a44; border-bottom: 0; font-weight: 600; color: var(--text); padding-top: 10px; }
+  .stbl tr.miss td { color: var(--faint); }
+  .rkpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
+  @media (prefers-reduced-motion: reduce) { .swave1, .swave2, .zz { animation: none; } .sfill { transition: none; } }
 </style>
 </head>
 <body>
@@ -163,6 +213,12 @@
   </div>
 </header>
 
+<div class="tabs" role="tablist">
+  <button id="tabLog" class="on">Log</button>
+  <button id="tabRep">Sleep report</button>
+</div>
+
+<div id="pageLog">
 <section class="log">
   <button id="wakeBtn">
     <span class="lbl">☀︎ Woke up</span>
@@ -203,6 +259,9 @@
   </div>
   <div class="stats" id="stats"></div>
 </section>
+</div>
+
+<div id="pageRep" hidden></div>
 
 <div id="sheetWrap">
   <div class="scrim" id="scrim"></div>
@@ -213,7 +272,7 @@
 <script>
 (() => {
   const KEY = 'sleeplog.v1';
-  const DEFAULTS = { wake: '04:00', bed: '20:00', windowMin: 60, showTargets: false };
+  const DEFAULTS = { wake: '04:00', bed: '20:00', windowMin: 60, showTargets: false, sleepTarget: 8 };
 
   // ---------- storage ----------
   function load() {
@@ -409,7 +468,268 @@
     $('targetSummary').textContent = `Wake ${s.wake} · Bed ${s.bed} · ±${w}`;
   }
 
-  function render() { renderButtons(); renderTargets(); renderCalendar(); renderStats(); }
+  function render() { renderButtons(); renderTargets(); renderCalendar(); renderStats(); if (page === 'rep') renderReport(); }
+
+  // ---------- sleep report page ----------
+  let page = 'log', rangeN = 14, lastLvl = null;
+  const SC = {
+    rested:   { l: 'Well rested',    c: '#7fd6a0', w: ['#a8f0c8', '#2f8a68'] },
+    short:    { l: 'Slightly short', c: '#e0c089', w: ['#ffe2a0', '#b0782a'] },
+    deprived: { l: 'Sleep deprived', c: '#e48a8a', w: ['#ffae9c', '#a33a4c'] },
+    over:     { l: 'Overslept',      c: '#9fb4e0', w: ['#c8d6ff', '#4a5fa8'] },
+    none:     { l: 'No data yet',    c: '#7b828d', w: ['#4a5059', '#2a2f37'] },
+  };
+  const tgt = () => (state.settings.sleepTarget || 8) * 60;
+  function sstat(m) {
+    if (m == null) return 'none';
+    const T = tgt();
+    if (m > T + 90) return 'over';
+    if (m >= T - 30) return 'rested';
+    if (m >= T - 90) return 'short';
+    return 'deprived';
+  }
+  const hrs = m => (Math.round(m / 6) / 10).toFixed(1);
+  const DOWS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const MON3 = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+  // Nights, newest first. A night is named by the morning you woke up (bed = previous day's bed time).
+  function nights(n) {
+    const keys = Object.keys(state.entries).sort(), out = [];
+    if (!keys.length) return out;
+    const first = keys[0];
+    for (let d = new Date(); ; d = addDays(d, -1)) {
+      const k = keyOf(d);
+      if (k < first) break;
+      const e = state.entries[k] || {}, p = state.entries[keyOf(addDays(d, -1))] || {};
+      if (e.wake || p.bed) out.push({ d: new Date(d.getFullYear(), d.getMonth(), d.getDate()), k, bed: p.bed || null, wake: e.wake || null, m: sleepMin(d) });
+      if (n && out.length >= n) break;
+    }
+    return out;
+  }
+  function roll7(d) {
+    const v = []; for (let i = 0; i < 7; i++) { const m = sleepMin(addDays(d, -i)); if (m) v.push(m); }
+    return v.length ? v.reduce((a, b) => a + b, 0) / v.length : null;
+  }
+
+  function renderReport() {
+    const all = nights(0), list = rangeN ? all.slice(0, rangeN) : all, T = tgt();
+    const withM = list.filter(x => x.m), last = all.find(x => x.m);
+    const avg = withM.length ? withM.reduce((a, x) => a + x.m, 0) / withM.length : null;
+    const debt = withM.reduce((a, x) => a + (T - x.m), 0);
+    const st = last ? sstat(last.m) : 'none';
+    const isLastNight = last && keyOf(last.d) === keyOf(new Date());
+    const counts = { rested: 0, short: 0, deprived: 0, over: 0 }; withM.forEach(x => counts[sstat(x.m)]++);
+    const rng = rangeN ? `${rangeN} nights` : 'all nights';
+    let h = `<section class="rcard rhero" style="--st:${SC[st].c}">
+      <div class="hgrid">
+        <div>${sleepBody(last ? last.m : 0, st)}</div>
+        <div class="ro">
+          <div class="eb">${last ? (isLastNight ? 'Last night' : 'Night ending ' + DOWS[last.d.getDay()] + ' ' + last.d.getDate() + ' ' + MON3[last.d.getMonth()]) : 'Last night'}</div>
+          <div class="big">${last ? `${Math.floor(last.m / 60)}<small>h</small> ${pad(last.m % 60)}<small>m</small>` : '—'}</div>
+          <div class="of">of ${state.settings.sleepTarget}h target${last ? ' · ' + Math.round(last.m / T * 100) + '%' : ''}</div>
+          <span class="spill"><i></i>${SC[st].l}</span>
+          <div class="facts">
+            ${last ? `<div>Bed <b>${last.bed}</b> → woke <b>${last.wake}</b></div>` : '<div>Log a bed time and the next wake time to see your first night.</div>'}
+            ${avg ? `<div>Average <b>${dur(Math.round(avg))}</b> over ${withM.length} night${withM.length === 1 ? '' : 's'}</div>` : ''}
+            ${withM.length ? `<div>${debt > 0 ? `Sleep debt <b style="color:${SC.deprived.c}">${dur(Math.round(debt))}</b>` : `Sleep surplus <b style="color:${SC.rested.c}">${dur(Math.round(-debt))}</b>`} vs ${state.settings.sleepTarget}h a night</div>` : ''}
+          </div>
+        </div>
+      </div>
+      ${nightRibbon(all.slice(0, 14).reverse())}
+    </section>
+    <div class="chipsr">${[[7, '7 nights'], [14, '14 nights'], [30, '30 nights'], [0, 'All']].map(([n, l]) => `<button data-r="${n}" class="${rangeN === n ? 'on' : ''}">${l}</button>`).join('')}</div>
+    <div class="rkpis">
+      ${kp('Average sleep', avg ? dur(Math.round(avg)) : '—', rng)}
+      ${kp('Nights at target', withM.length ? `${counts.rested}<small> / ${withM.length}</small>` : '—', `${state.settings.sleepTarget - .5}–${state.settings.sleepTarget + 1.5}h`)}
+      ${kp('Longest', withM.length ? dur(Math.max(...withM.map(x => x.m))) : '—', withM.length ? dayLbl(withM.reduce((a, x) => x.m > a.m ? x : a).d) : '')}
+      ${kp('Shortest', withM.length ? dur(Math.min(...withM.map(x => x.m))) : '—', withM.length ? dayLbl(withM.reduce((a, x) => x.m < a.m ? x : a).d) : '')}
+    </div>`;
+    const chron = list.slice().reverse();
+    h += `<section class="rcard rchart"><h4>Hours slept vs ${state.settings.sleepTarget}h target <span>${rng}</span></h4>${barsChart(chron)}
+      <div class="rleg">${['rested', 'short', 'deprived', 'over'].map(k => `<span><i style="background:${SC[k].c}"></i>${SC[k].l}</span>`).join('')}</div></section>`;
+    h += `<section class="rcard rchart"><h4>Sleep bank <span>actual vs target, adding up</span></h4>${bankChart(chron)}
+      <div class="rleg"><span><i style="background:${SC.rested.c}"></i>Ahead of target</span><span><i style="background:${SC.deprived.c}"></i>In sleep debt</span><span><i style="background:none;border-top:2px dashed #7b828d;border-radius:0;height:0;width:14px"></i>${state.settings.sleepTarget}h every night</span></div>
+      <div class="rcap">${withM.length ? (debt > 0 ? `You're <b>${dur(Math.round(debt))}</b> behind ${state.settings.sleepTarget}h a night over these ${withM.length} nights, about <b>${dur(Math.round(debt / withM.length))}</b> a night.` : `You're <b>${dur(Math.round(-debt))}</b> ahead of ${state.settings.sleepTarget}h a night over these ${withM.length} nights.`) : 'Fills in once you have complete nights.'}</div></section>`;
+    h += `<section class="rcard rchart"><h4>When you slept <span>target ${state.settings.bed} → ${state.settings.wake}</span></h4>${windowChart(chron)}</section>`;
+    h += `<section class="rcard"><h4>Night by night <span>${rng}</span></h4>${table(list)}</section>`;
+    $('pageRep').innerHTML = h;
+    $('pageRep').querySelectorAll('[data-r]').forEach(b => b.onclick = () => { rangeN = +b.dataset.r; renderReport(); });
+    $('pageRep').querySelectorAll('[data-day]').forEach(b => b.onclick = () => openDay(new Date(+b.dataset.day)));
+    const f = $('sfill');
+    if (f) requestAnimationFrame(() => requestAnimationFrame(() => { f.style.transform = `translateY(${f.dataset.to}px)`; lastLvl = +f.dataset.to; }));
+  }
+  const kp = (k, v, s) => `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div><div class="k" style="margin-top:2px;color:var(--faint)">${s}</div></div>`;
+  const dayLbl = d => `${DOWS[d.getDay()]} ${d.getDate()} ${MON3[d.getMonth()]}`;
+
+  // The body: fills like a battery with how long you slept (full = target + 2h)
+  function sleepBody(m, st) {
+    const TOP = 17, BOT = 398, HH = BOT - TOP, T = tgt(), full = T + 120;
+    const lvl = BOT - Math.min(m / full, 1) * HH, start = lastLvl ?? BOT, pal = SC[st].w, oc = SC[st].c;
+    const wave = A => { let d = 'M-200,0'; for (let x = -200; x < 600; x += 50) d += ` q25,${(x / 50) % 2 ? A : -A} 50,0`; return d + ' L600,420 L-200,420 Z'; };
+    const ticks = [120, 240, 360, T, full].filter((v, i, a) => a.indexOf(v) === i).map(v => {
+      const y = BOT - v / full * HH, t = v === T;
+      return `<line x1="182" x2="${t ? 194 : 190}" y1="${y}" y2="${y}" stroke="${t ? oc : '#4a5059'}" stroke-width="${t ? 2 : 1.4}"/>
+        <text x="198" y="${y + 4}" font-size="${t ? 13 : 11.5}" font-weight="${t ? 700 : 500}" fill="${t ? oc : '#7b828d'}">${v / 60}h</text>`;
+    }).join('');
+    const face = lvl < 66 ? '#0b1a14' : '#d6d9de';
+    const eyes = st === 'rested' || st === 'none'
+      ? `<circle cx="91" cy="41" r="2.8" fill="${face}"/><circle cx="109" cy="41" r="2.8" fill="${face}"/>`
+      : st === 'short' ? `<path d="M87 42 h8 M105 42 h8" stroke="${face}" stroke-width="2.4" stroke-linecap="round"/>`
+      : st === 'over' ? `<path d="M87 41 q4 3 8 0 M105 41 q4 3 8 0" stroke="${face}" stroke-width="2.2" fill="none" stroke-linecap="round"/>`
+      : `<path d="M87 40 q4 -3 8 0 M105 40 q4 -3 8 0" stroke="${face}" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M86 47 q5 3 10 0 M104 47 q5 3 10 0" stroke="#8a4a5a" stroke-width="1.6" fill="none" opacity=".8"/>`;
+    const mouth = st === 'deprived' ? 'M90 61 Q100 53 110 61' : st === 'short' || st === 'none' ? 'M91 58 L109 58' : st === 'over' ? 'M95 58 Q100 61 105 58' : 'M89 55 Q100 66 111 55';
+    const zs = st === 'deprived' || st === 'short' || st === 'over'
+      ? `<text class="zz" x="130" y="30" font-size="15" font-weight="700" fill="${oc}">z</text><text class="zz b" x="140" y="18" font-size="11" font-weight="700" fill="${oc}">z</text>` : '';
+    return `<svg viewBox="-6 0 236 404" role="img" aria-label="Body charged by ${m ? dur(m) : 'no'} sleep">
+      <defs>
+        <g id="sShape">
+          <ellipse cx="100" cy="46" rx="25" ry="29"/><rect x="89" y="68" width="22" height="26" rx="8"/>
+          <path d="M62 94 Q100 82 138 94 Q151 99 149 118 L141 198 Q137 228 135 246 L65 246 Q63 228 59 198 L51 118 Q49 99 62 94Z"/>
+          <path d="M65 236 L135 236 L134 262 Q100 276 66 262Z"/>
+          <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="60,106 43,176 37,236" stroke-width="20"/><polyline points="140,106 157,176 163,236" stroke-width="20"/>
+            <polyline points="83,252 80,322 78,382" stroke-width="28"/><polyline points="117,252 120,322 122,382" stroke-width="28"/>
+          </g>
+          <circle cx="36" cy="246" r="11"/><circle cx="164" cy="246" r="11"/>
+          <ellipse cx="74" cy="391" rx="16" ry="7.5"/><ellipse cx="126" cy="391" rx="16" ry="7.5"/>
+        </g>
+        <mask id="sMask" maskUnits="userSpaceOnUse" x="-10" y="0" width="230" height="404"><use href="#sShape" fill="#fff" stroke="#fff"/></mask>
+        <linearGradient id="sGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${pal[0]}"/><stop offset="1" stop-color="${pal[1]}"/></linearGradient>
+        <filter id="sOl" x="-20%" y="-10%" width="140%" height="120%">
+          <feMorphology in="SourceAlpha" operator="dilate" radius="2.4" result="d"/>
+          <feComposite in="d" in2="SourceAlpha" operator="out" result="o"/>
+          <feFlood flood-color="${oc}"/><feComposite in2="o" operator="in" result="c"/>
+          <feGaussianBlur in="c" stdDeviation="3" result="g"/><feMerge><feMergeNode in="g"/><feMergeNode in="c"/></feMerge>
+        </filter>
+      </defs>
+      <g mask="url(#sMask)">
+        <rect x="-10" y="0" width="230" height="404" fill="#181c23"/>
+        <g class="sfill" id="sfill" data-to="${lvl}" style="transform:translateY(${start}px)">
+          <g class="swave2"><path d="${wave(5)}" fill="${pal[1]}" opacity=".5" transform="translate(0,-3)"/></g>
+          <g class="swave1"><path d="${wave(6)}" fill="url(#sGrad)"/></g>
+        </g>
+      </g>
+      <use href="#sShape" fill="#fff" stroke="#fff" filter="url(#sOl)" opacity=".95"/>
+      ${eyes}<path d="${mouth}" stroke="${face}" stroke-width="2.6" fill="none" stroke-linecap="round"/>${zs}
+      <rect x="181" y="${TOP}" width="2" height="${HH}" fill="#2a2f37" rx="1"/>
+      <rect x="180" y="${BOT - (T + 90) / full * HH}" width="4" height="${120 / full * HH}" fill="${SC.rested.c}" opacity=".35" rx="2"/>
+      ${ticks}
+    </svg>`;
+  }
+
+  // One segment per night, oldest → newest, like a status ribbon
+  function nightRibbon(ns) {
+    const W = 340, n = ns.length;
+    if (!n) return '';
+    const bw = W / n, c = { rested: 0, short: 0, deprived: 0, over: 0 };
+    let g = '';
+    ns.forEach((x, i) => {
+      const s = sstat(x.m); if (x.m) c[s]++;
+      g += `<rect x="${(i * bw + 1).toFixed(1)}" y="16" width="${(bw - 2).toFixed(1)}" height="14" rx="3" fill="${x.m ? SC[s].c : '#2a2f37'}"/>`;
+      if (n <= 14 && (i % 2 === (n - 1) % 2)) g += `<text x="${(i * bw + bw / 2).toFixed(1)}" y="44" text-anchor="middle" font-size="9.5" fill="#7b828d">${x.d.getDate()}</text>`;
+    });
+    return `<div class="rib"><svg viewBox="0 0 ${W} 48" role="img" aria-label="Sleep status for recent nights">
+      <text x="0" y="10" font-size="10.5" fill="#7b828d" letter-spacing="1">LAST ${n} NIGHTS</text>${g}</svg>
+      <div class="counts">${['rested', 'short', 'deprived', 'over'].filter(k => c[k]).map(k => `<span><i style="background:${SC[k].c}"></i>${SC[k].l} <b>${c[k]}</b></span>`).join('') || '<span>Each square is one night.</span>'}</div></div>`;
+  }
+
+  function barsChart(ns) {
+    const W = 340, Hh = 160, top = 16, base = Hh - 20, T = tgt(), n = ns.length || 1;
+    const ymax = Math.max(T + 150, ...ns.map(x => (x.m || 0) * 1.08));
+    const Y = v => base - v / ymax * (base - top), bw = W / n;
+    let g = `<rect x="0" y="${Y(T + 90).toFixed(1)}" width="${W}" height="${(Y(T - 30) - Y(T + 90)).toFixed(1)}" fill="${SC.rested.c}" opacity=".08"/>`;
+    for (let v = 120; v < ymax; v += 120) g += `<line x1="0" x2="${W}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" stroke="#20252d"/>${v === T ? '' : `<text x="2" y="${(Y(v) - 2).toFixed(1)}" font-size="9" fill="#4a5059">${v / 60}h</text>`}`;
+    g += `<line x1="0" x2="${W}" y1="${Y(T).toFixed(1)}" y2="${Y(T).toFixed(1)}" stroke="${SC.rested.c}" stroke-dasharray="5 4" opacity=".8"/>
+      <text x="2" y="${(Y(T) + 11).toFixed(1)}" font-size="10" fill="${SC.rested.c}" paint-order="stroke" stroke="#14171c" stroke-width="3">${state.settings.sleepTarget}h target</text>`;
+    ns.forEach((x, i) => {
+      const X = i * bw + bw * .18, w = bw * .64;
+      if (x.m) {
+        const yy = Y(x.m);
+        g += `<rect x="${X.toFixed(1)}" y="${yy.toFixed(1)}" width="${w.toFixed(1)}" height="${(base - yy).toFixed(1)}" rx="${Math.min(4, w / 2).toFixed(1)}" fill="${SC[sstat(x.m)].c}"/>`;
+        if (n <= 16) g += `<text x="${(X + w / 2).toFixed(1)}" y="${(yy - 4).toFixed(1)}" text-anchor="middle" font-size="9.5" fill="#d6d9de">${hrs(x.m)}</text>`;
+      } else g += `<rect x="${X.toFixed(1)}" y="${base - 3}" width="${w.toFixed(1)}" height="3" rx="1.5" fill="#2a2f37"/>`;
+      if (n <= 7 || i % Math.ceil(n / 10) === 0) g += `<text x="${(X + w / 2).toFixed(1)}" y="${Hh - 5}" text-anchor="middle" font-size="9.5" fill="#7b828d">${n <= 7 ? DOWS[x.d.getDay()] : x.d.getDate()}</text>`;
+      g += `<rect x="${(i * bw).toFixed(1)}" y="0" width="${bw.toFixed(1)}" height="${Hh}" fill="transparent" data-day="${x.d.getTime()}" style="cursor:pointer"/>`;
+    });
+    g += `<line x1="0" x2="${W}" y1="${base}" y2="${base}" stroke="#262b33"/>`;
+    return n && ns.length ? `<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Hours slept per night">${g}</svg>` : '<div class="note">No nights logged yet.</div>';
+  }
+
+  // Cumulative sleep vs cumulative target; the gap is shaded green (ahead) or red (debt)
+  function bankChart(ns) {
+    const pts = []; let a = 0, t = 0;
+    ns.forEach(x => { if (x.m) { a += x.m; t += tgt(); pts.push({ x, a, t }); } });
+    if (pts.length < 2) return '<div class="note">Needs at least two complete nights.</div>';
+    const W = 340, Hh = 170, top = 12, base = Hh - 20, left = 30, n = pts.length;
+    const ymax = Math.max(...pts.map(p => Math.max(p.a, p.t))) * 1.06;
+    const X = i => left + (i + 1) / n * (W - left - 6), Y = v => base - v / ymax * (base - top);
+    let g = '';
+    const step = [4, 8, 24, 48, 96, 192].map(h => h * 60).find(st => ymax / st <= 5) || 384 * 60;
+    for (let v = step; v < ymax; v += step) g += `<line x1="${left}" x2="${W - 6}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" stroke="#20252d"/><text x="${left - 4}" y="${(Y(v) + 3).toFixed(1)}" text-anchor="end" font-size="9" fill="#7b828d">${v / 60}h</text>`;
+    const P = [{ a: 0, t: 0 }, ...pts], XX = i => i === 0 ? left : X(i - 1);
+    for (let i = 1; i < P.length; i++) {
+      const p0 = P[i - 1], p1 = P[i], c = p1.a >= p1.t - 30 ? SC.rested.c : SC.deprived.c;
+      g += `<polygon points="${XX(i - 1).toFixed(1)},${Y(p0.a).toFixed(1)} ${XX(i).toFixed(1)},${Y(p1.a).toFixed(1)} ${XX(i).toFixed(1)},${Y(p1.t).toFixed(1)} ${XX(i - 1).toFixed(1)},${Y(p0.t).toFixed(1)}" fill="${c}" opacity=".35"/>`;
+    }
+    g += `<polyline points="${P.map((p, i) => `${XX(i).toFixed(1)},${Y(p.t).toFixed(1)}`).join(' ')}" fill="none" stroke="#7b828d" stroke-width="1.6" stroke-dasharray="5 4"/>`;
+    g += `<polyline points="${P.map((p, i) => `${XX(i).toFixed(1)},${Y(p.a).toFixed(1)}`).join(' ')}" fill="none" stroke="#c9d4ea" stroke-width="2.2" stroke-linejoin="round"/>`;
+    pts.forEach((p, i) => { g += `<circle cx="${X(i).toFixed(1)}" cy="${Y(p.a).toFixed(1)}" r="3" fill="${SC[sstat(p.x.m)].c}" stroke="#0b0d10" stroke-width="1.2"/>`;
+      const kk = Math.ceil(n / 7); if (n <= 7 || i === n - 1 || (i % kk === 0 && i < n - 1 - kk / 2)) g += `<text x="${X(i).toFixed(1)}" y="${Hh - 5}" text-anchor="${i === n - 1 ? 'end' : 'middle'}" font-size="9.5" fill="#7b828d">${n <= 7 ? DOWS[p.x.d.getDay()] : p.x.d.getDate() + ' ' + MON3[p.x.d.getMonth()]}</text>`; });
+    const last = pts[n - 1], gap = last.a - last.t;
+    g += `<text x="${W - 6}" y="${(Math.min(Y(last.a), Y(last.t)) - 6).toFixed(1)}" text-anchor="end" font-size="10.5" font-weight="600" fill="${gap >= -30 ? SC.rested.c : SC.deprived.c}">${gap >= 0 ? '+' : '−'}${dur(Math.round(Math.abs(gap)))}</text>`;
+    g += `<line x1="${left}" x2="${W - 6}" y1="${base}" y2="${base}" stroke="#262b33"/>`;
+    return `<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Cumulative sleep against target">${g}</svg>`;
+  }
+
+  // Each night as a bar from bed time to wake time, against the target window
+  function windowChart(ns) {
+    const rows = ns.filter(x => x.bed || x.wake);
+    if (!rows.length) return '<div class="note">No nights logged yet.</div>';
+    const W = 340, left = 46, rh = rows.length > 16 ? 9 : 16, top = 8, Hh = top + rows.length * rh + 22;
+    const BASE = 16 * 60, SPAN = 18 * 60; // 16:00 → 10:00
+    const xm = t => { const m = (toMin(t) - BASE + 1440) % 1440; return left + Math.min(m, SPAN) / SPAN * (W - left - 4); };
+    let g = `<rect x="${xm(state.settings.bed).toFixed(1)}" y="${top - 2}" width="${(xm(state.settings.wake) - xm(state.settings.bed)).toFixed(1)}" height="${rows.length * rh + 4}" fill="#8fa3c7" opacity=".08"/>`;
+    ['18:00', '20:00', '22:00', '00:00', '02:00', '04:00', '06:00', '08:00'].forEach(t => {
+      g += `<line x1="${xm(t).toFixed(1)}" x2="${xm(t).toFixed(1)}" y1="${top - 2}" y2="${top + rows.length * rh}" stroke="#20252d"/><text x="${xm(t).toFixed(1)}" y="${Hh - 6}" text-anchor="middle" font-size="9" fill="#7b828d">${t.slice(0, 2)}</text>`;
+    });
+    rows.forEach((x, i) => {
+      const y = top + i * rh, c = x.m ? SC[sstat(x.m)].c : '#4a5059';
+      g += `<text x="0" y="${(y + rh / 2 + 3).toFixed(1)}" font-size="${rh > 10 ? 9.5 : 8}" fill="#7b828d">${DOWS[x.d.getDay()].slice(0, 2)} ${x.d.getDate()}</text>`;
+      if (x.bed && x.wake && x.m) g += `<rect x="${xm(x.bed).toFixed(1)}" y="${(y + 2).toFixed(1)}" width="${Math.max(2, xm(x.wake) - xm(x.bed)).toFixed(1)}" height="${rh - 4}" rx="${(rh - 4) / 2}" fill="${c}" opacity=".9"/>`;
+      else { if (x.bed) g += `<circle cx="${xm(x.bed).toFixed(1)}" cy="${(y + rh / 2).toFixed(1)}" r="3" fill="#8fa3c7"/>`; if (x.wake) g += `<circle cx="${xm(x.wake).toFixed(1)}" cy="${(y + rh / 2).toFixed(1)}" r="3" fill="#d6d9de"/>`; }
+      g += `<rect x="0" y="${y}" width="${W}" height="${rh}" fill="transparent" data-day="${x.d.getTime()}" style="cursor:pointer"/>`;
+    });
+    return `<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Bed to wake time for each night">${g}</svg>
+      <div class="rleg"><span><i style="background:#8fa3c7;opacity:.35"></i>Target window</span><span>Dots = only one time logged</span><span>Rows newest at the bottom</span></div>`;
+  }
+
+  function table(ns) {
+    if (!ns.length) return '<div class="note">Your nights will appear here once you log bed and wake times.</div>';
+    const withM = ns.filter(x => x.m);
+    const avgM = withM.length ? Math.round(withM.reduce((a, x) => a + x.m, 0) / withM.length) : null;
+    const rows = ns.map((x, i) => {
+      const r = roll7(x.d), s = sstat(x.m);
+      return `<tr class="${x.m ? '' : 'miss'}" data-day="${x.d.getTime()}">
+        <td class="sn">${i + 1}</td><td>${pad(x.d.getDate())} ${MON3[x.d.getMonth()]}</td><td>${DOWS[x.d.getDay()]}</td>
+        <td>${x.bed || '—'}</td><td>${x.wake || '—'}</td>
+        <td class="dur">${x.m ? `<i style="background:${SC[s].c}"></i>${dur(x.m)}` : '—'}</td>
+        <td>${r ? hrs(r) + 'h' : '—'}</td></tr>`;
+    }).join('');
+    const bAvg = avgClock(ns.map(x => x.bed).filter(Boolean), state.settings.bed), wAvg = avgClock(ns.map(x => x.wake).filter(Boolean), state.settings.wake);
+    return `<div class="tblw"><table class="stbl"><thead><tr><th>S.No</th><th>Date</th><th>Day</th><th>Bed</th><th>Wake</th><th>Slept</th><th>7N avg</th></tr></thead>
+      <tbody>${rows}<tr class="avg"><td></td><td colspan="2">Average</td><td>${bAvg || '—'}</td><td>${wAvg || '—'}</td><td>${avgM ? dur(avgM) : '—'}</td><td></td></tr></tbody></table></div>
+      <div class="note">Each row is the morning you woke up; Bed is the night before. 7N avg is the average of that night and the 6 before it. Tap a row to fix its times.</div>`;
+  }
+
+  function showPage(p) {
+    page = p;
+    $('pageLog').hidden = p !== 'log'; $('pageRep').hidden = p !== 'rep';
+    $('tabLog').classList.toggle('on', p === 'log'); $('tabRep').classList.toggle('on', p === 'rep');
+    if (p === 'rep') { lastLvl = null; renderReport(); }
+    window.scrollTo(0, 0);
+  }
+  $('tabLog').onclick = () => showPage('log');
+  $('tabRep').onclick = () => showPage('rep');
 
   // ---------- sheets ----------
   function openSheet(html) { $('sheet').innerHTML = html; document.body.classList.add('open'); }
@@ -449,6 +769,7 @@
       <div class="field"><label>Target wake time</label><input type="time" id="sW" value="${s.wake}"></div>
       <div class="field"><label>Target bed time</label><input type="time" id="sB" value="${s.bed}"></div>
       <div class="field"><label>Counts as on time within</label><select id="sWin">${opts}</select></div>
+      <div class="field"><label>Sleep target</label><select id="sTgt">${[6, 6.5, 7, 7.5, 8, 8.5, 9].map(h => `<option value="${h}"${h === (s.sleepTarget || 8) ? ' selected' : ''}>${h} hours</option>`).join('')}</select></div>
       <div class="actions"><button class="btn primary" id="sSave">Save targets</button></div>
       <div class="actions">
         <button class="btn" id="exp">Export backup</button>
@@ -457,7 +778,7 @@
       <input type="file" id="impFile" accept="application/json,.json" hidden>
       <div class="note">Your data lives only on this phone. Export a backup now and then — clearing browser data would erase it.</div>`);
     $('sSave').onclick = () => {
-      s.wake = $('sW').value || s.wake; s.bed = $('sB').value || s.bed; s.windowMin = +$('sWin').value;
+      s.wake = $('sW').value || s.wake; s.bed = $('sB').value || s.bed; s.windowMin = +$('sWin').value; s.sleepTarget = +$('sTgt').value;
       save(); closeSheet(); render(); toast('Targets updated');
     };
     $('exp').onclick = exportData;
