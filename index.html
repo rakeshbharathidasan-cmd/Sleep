@@ -198,7 +198,48 @@
   .stbl tr.avg td { border-top: 1px solid #343a44; border-bottom: 0; font-weight: 600; color: var(--text); padding-top: 10px; }
   .stbl tr.miss td { color: var(--faint); }
   .rkpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: 12px; }
-  @media (prefers-reduced-motion: reduce) { .swave1, .swave2, .zz { animation: none; } .sfill { transition: none; } }
+  /* ---------- motion ---------- */
+  @keyframes rise { from { opacity: 0; transform: translateY(12px); } }
+  @keyframes pgl { from { opacity: 0; transform: translateX(-24px); } }
+  @keyframes pgr { from { opacity: 0; transform: translateX(24px); } }
+  @keyframes pop { 0% { transform: scale(.6); opacity: 0; } 60% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); } }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes fadein { from { opacity: 0; } }
+  @keyframes gb { from { transform: scaleY(0); } }
+  @keyframes glowW { 0% { box-shadow: 0 0 0 0 rgba(255,214,120,.55); } 100% { box-shadow: 0 0 0 22px rgba(255,214,120,0); } }
+  @keyframes glowB { 0% { box-shadow: 0 0 0 0 rgba(143,163,199,.6); } 100% { box-shadow: 0 0 0 22px rgba(143,163,199,0); } }
+  @keyframes floatUp { 0% { opacity: 0; transform: translate(-50%, 20px) scale(.6); } 25% { opacity: 1; transform: translate(-50%, -10px) scale(1.15); } 100% { opacity: 0; transform: translate(-50%, -90px) scale(1); } }
+  @keyframes ticker { from { opacity: 0; transform: translateY(6px); } }
+  .pg-l { animation: pgl .32s ease both; } .pg-r { animation: pgr .32s ease both; }
+  #grid.sl .day:not(.blank) { animation: pop .35s both; }
+  #grid.sl .day:nth-child(7n+1) { animation-delay: 0ms; } #grid.sl .day:nth-child(7n+2) { animation-delay: 20ms; } #grid.sl .day:nth-child(7n+3) { animation-delay: 40ms; }
+  #grid.sl .day:nth-child(7n+4) { animation-delay: 60ms; } #grid.sl .day:nth-child(7n+5) { animation-delay: 80ms; } #grid.sl .day:nth-child(7n+6) { animation-delay: 100ms; } #grid.sl .day:nth-child(7n) { animation-delay: 120ms; }
+  .stat { animation: rise .4s both; }
+  .stats .stat:nth-child(2) { animation-delay: 40ms; } .stats .stat:nth-child(3) { animation-delay: 80ms; } .stats .stat:nth-child(4) { animation-delay: 120ms; }
+  .stats .stat:nth-child(5) { animation-delay: 160ms; } .stats .stat:nth-child(6) { animation-delay: 200ms; } .stats .stat:nth-child(7) { animation-delay: 240ms; } .stats .stat:nth-child(8) { animation-delay: 280ms; }
+  .rcard, .chipsr, .rkpis, .ncard { animation: rise .45s both; }
+  #pageRep > :nth-child(2) { animation-delay: 60ms; } #pageRep > :nth-child(3) { animation-delay: 120ms; } #pageRep > :nth-child(4) { animation-delay: 180ms; }
+  #pageRep > :nth-child(5) { animation-delay: 240ms; } #pageRep > :nth-child(6) { animation-delay: 300ms; } #pageRep > :nth-child(7) { animation-delay: 360ms; } #pageRep > :nth-child(8) { animation-delay: 420ms; }
+  .draw { stroke-dasharray: 1400; stroke-dashoffset: 1400; animation: draw 1.4s cubic-bezier(.3,.7,.2,1) .15s forwards; }
+  .fadein { animation: fadein .9s .25s both; }
+  .gbar { transform-box: fill-box; transform-origin: 50% 100%; animation: gb .6s cubic-bezier(.2,.9,.3,1) both; }
+  .log button.w-on { animation: glowW .8s ease-out; } .log button.b-on { animation: glowB .8s ease-out; }
+  .log .val { animation: ticker .35s both; }
+  .burst { position: fixed; left: 50%; top: 42%; font-size: 64px; pointer-events: none; z-index: 30; animation: floatUp 1.4s ease-out forwards; filter: drop-shadow(0 0 18px rgba(255,214,120,.6)); }
+  .tabs button { transition: background .25s, color .25s, box-shadow .25s; }
+  .cal-head h2 { animation: ticker .3s both; }
+  /* ---------- last night vs ideal pace (Hydra-style) ---------- */
+  .ncard { background: radial-gradient(320px 200px at 100% 0, rgba(143,163,199,.12), transparent 70%), var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px; margin-bottom: 16px; }
+  .nhd { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+  .nhd .k { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+  .nhd .v { font-size: 18px; white-space: nowrap; font-weight: 700; font-variant-numeric: tabular-nums; margin-top: 2px; }
+  .nhd .v small { font-size: 13px; color: var(--muted); font-weight: 500; }
+  .nnav { display: flex; gap: 4px; }
+  .nnav button { width: 32px; height: 32px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--line); color: var(--muted); font-size: 16px; }
+  .nnav button:disabled { opacity: .3; }
+  .ncard svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .sndrow { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); }
+  @media (prefers-reduced-motion: reduce) { *, .swave1, .swave2, .zz { animation: none !important; } .sfill { transition: none; } .draw { stroke-dashoffset: 0; } }
 </style>
 </head>
 <body>
@@ -242,6 +283,8 @@
   </div>
 </section>
 
+<div id="nightLog"></div>
+
 <section>
   <div class="cal-head">
     <button class="icon-btn" id="prevM" aria-label="Previous month">‹</button>
@@ -272,7 +315,7 @@
 <script>
 (() => {
   const KEY = 'sleeplog.v1';
-  const DEFAULTS = { wake: '04:00', bed: '20:00', windowMin: 60, showTargets: false, sleepTarget: 8 };
+  const DEFAULTS = { wake: '04:00', bed: '20:00', windowMin: 60, showTargets: false, sleepTarget: 8, sound: true };
 
   // ---------- storage ----------
   function load() {
@@ -298,7 +341,10 @@
   const keyOf = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   const hm = d => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
   const toMin = s => { const [h, m] = s.split(':').map(Number); return h * 60 + m; };
-  const fmt = s => s; // 24h HH:MM
+  // 12-hour display: "8:05 PM" (full) and "8:05p" (compact, for calendar cells and charts)
+  const fmt = s => { if (!s) return ''; const [h, m] = s.split(':').map(Number); return `${h % 12 || 12}:${pad(m)} ${h < 12 ? 'AM' : 'PM'}`; };
+  const fmtS = s => { if (!s) return ''; const [h, m] = s.split(':').map(Number); return `${h % 12 || 12}:${pad(m)}${h < 12 ? 'a' : 'p'}`; };
+  const hr12 = h => `${h % 12 || 12}${h < 12 ? 'a' : 'p'}`;
   const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
 
   function bedDayFor(now) {
@@ -327,6 +373,27 @@
     return n === 2 ? 'green' : n === 1 ? 'amber' : 'red';
   }
 
+  // ---------- sound (made in the app, no files) ----------
+  let AC = null;
+  function snd(kind) {
+    if (!state.settings.sound) return;
+    try {
+      AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if (AC.state === 'suspended') AC.resume();
+      const now = AC.currentTime;
+      const tone = (f, st, d, type = 'sine', g = .07) => { const o = AC.createOscillator(), gn = AC.createGain(); o.type = type; o.frequency.value = f;
+        gn.gain.setValueAtTime(0, now + st); gn.gain.linearRampToValueAtTime(g, now + st + .015); gn.gain.exponentialRampToValueAtTime(.0001, now + st + d);
+        o.connect(gn).connect(AC.destination); o.start(now + st); o.stop(now + st + d + .05); };
+      if (kind === 'wake') [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, i * .09, .7, 'sine', .06));        // sunrise: rising, bright
+      else if (kind === 'bed') [784, 659, 523, 392].forEach((f, i) => tone(f, i * .16, 1.1, 'sine', .05));           // lullaby: falling, soft
+      else if (kind === 'tap') tone(1046, 0, .05, 'triangle', .025);
+      else if (kind === 'tab') { tone(784, 0, .07, 'triangle', .025); tone(1046, .045, .08, 'triangle', .02); }
+      else if (kind === 'save') [659, 784, 988].forEach((f, i) => tone(f, i * .07, .45, 'sine', .05));
+      else if (kind === 'del') { tone(392, 0, .12, 'triangle', .04); tone(262, .08, .2, 'triangle', .04); }
+      else if (kind === 'sheet') tone(660, 0, .09, 'sine', .03);
+    } catch (e) {}
+  }
+  function burst(kind) { const b = document.createElement('div'); b.className = 'burst'; b.textContent = kind === 'wake' ? '☀️' : '🌙'; document.body.appendChild(b); setTimeout(() => b.remove(), 1500); }
+
   // ---------- logging ----------
   function logNow(kind) {
     const now = new Date();
@@ -336,14 +403,15 @@
     const e = state.entries[k] || {};
     if (e[kind]) {
       const what = kind === 'wake' ? 'Wake' : 'Bed';
-      if (!confirm(`${what} time for ${prettyDate(day)} is already ${e[kind]}.\nReplace with ${t}?`)) return;
+      if (!confirm(`${what} time for ${prettyDate(day)} is already ${fmt(e[kind])}.\nReplace with ${fmt(t)}?`)) return;
     }
     e[kind] = t;
     state.entries[k] = e;
     save();
     if (navigator.vibrate) navigator.vibrate(18);
     const sl = kind === 'wake' ? sleepMin(day) : null;
-    toast(kind === 'wake' ? `Good morning · ${t}${sl ? ` · slept ${dur(sl)}` : ''}` : `Good night · ${t}`);
+    toast(kind === 'wake' ? `Good morning · ${fmt(t)}${sl ? ` · slept ${dur(sl)}` : ''}` : `Good night · ${fmt(t)}`);
+    snd(kind); burst(kind); const btn = $(kind + 'Btn'); btn.classList.remove('w-on', 'b-on'); void btn.offsetWidth; btn.classList.add(kind === 'wake' ? 'w-on' : 'b-on');
     view = new Date(day.getFullYear(), day.getMonth(), 1);
     render();
   }
@@ -391,8 +459,8 @@
       if (k > todayK) el.classList.add('future');
       if (on && e && (e.wake || e.bed)) el.classList.add('c-' + status(e));
       let html = `<span class="n">${d}</span><span class="times">`;
-      if (e && e.wake) html += `<span class="t w${on && !hit('wake', e.wake) ? ' miss' : ''}">${fmt(e.wake)}</span>`;
-      if (e && e.bed) html += `<span class="t b${on && !hit('bed', e.bed) ? ' miss' : ''}">${fmt(e.bed)}</span>`;
+      if (e && e.wake) html += `<span class="t w${on && !hit('wake', e.wake) ? ' miss' : ''}">${fmtS(e.wake)}</span>`;
+      if (e && e.bed) html += `<span class="t b${on && !hit('bed', e.bed) ? ' miss' : ''}">${fmtS(e.bed)}</span>`;
       const sl = sleepMin(date);
       if (sl) html += `<span class="t d">${durShort(sl)}</span>`;
       html += '</span>';
@@ -427,8 +495,8 @@
     let cards = [
       ['Avg sleep', nights.length ? dur(Math.round(total / nights.length)) : '—', `${nights.length} nights`],
       ['Total sleep', nights.length ? `${Math.round(total / 6) / 10}h` : '—', 'this month'],
-      ['Avg wake', avgClock(wakes, state.settings.wake) || '—', `${wakes.length} logs`],
-      ['Avg bed', avgClock(beds, state.settings.bed) || '—', `${beds.length} logs`],
+      ['Avg wake', fmt(avgClock(wakes, state.settings.wake)) || '—', `${wakes.length} logs`],
+      ['Avg bed', fmt(avgClock(beds, state.settings.bed)) || '—', `${beds.length} logs`],
     ];
     if (on) {
       const full = month.filter(e => e.wake && e.bed);
@@ -465,10 +533,10 @@
     const s = state.settings;
     $('targetToggle').checked = s.showTargets;
     const w = s.windowMin >= 60 ? `${s.windowMin / 60}h` : `${s.windowMin}m`;
-    $('targetSummary').textContent = `Wake ${s.wake} · Bed ${s.bed} · ±${w}`;
+    $('targetSummary').textContent = `Wake ${fmt(s.wake)} · Bed ${fmt(s.bed)} · ±${w}`;
   }
 
-  function render() { renderButtons(); renderTargets(); renderCalendar(); renderStats(); if (page === 'rep') renderReport(); }
+  function render() { renderButtons(); renderTargets(); renderCalendar(); renderStats(); renderNight('nightLog'); if (page === 'rep') renderReport(); }
 
   // ---------- sleep report page ----------
   let page = 'log', rangeN = 14, lastLvl = null;
@@ -529,7 +597,7 @@
           <div class="of">of ${state.settings.sleepTarget}h target${last ? ' · ' + Math.round(last.m / T * 100) + '%' : ''}</div>
           <span class="spill"><i></i>${SC[st].l}</span>
           <div class="facts">
-            ${last ? `<div>Bed <b>${last.bed}</b> → woke <b>${last.wake}</b></div>` : '<div>Log a bed time and the next wake time to see your first night.</div>'}
+            ${last ? `<div>Bed <b>${fmt(last.bed)}</b> → woke <b>${fmt(last.wake)}</b></div>` : '<div>Log a bed time and the next wake time to see your first night.</div>'}
             ${avg ? `<div>Average <b>${dur(Math.round(avg))}</b> over ${withM.length} night${withM.length === 1 ? '' : 's'}</div>` : ''}
             ${withM.length ? `<div>${debt > 0 ? `Sleep debt <b style="color:${SC.deprived.c}">${dur(Math.round(debt))}</b>` : `Sleep surplus <b style="color:${SC.rested.c}">${dur(Math.round(-debt))}</b>`} vs ${state.settings.sleepTarget}h a night</div>` : ''}
           </div>
@@ -544,19 +612,65 @@
       ${kp('Longest', withM.length ? dur(Math.max(...withM.map(x => x.m))) : '—', withM.length ? dayLbl(withM.reduce((a, x) => x.m > a.m ? x : a).d) : '')}
       ${kp('Shortest', withM.length ? dur(Math.min(...withM.map(x => x.m))) : '—', withM.length ? dayLbl(withM.reduce((a, x) => x.m < a.m ? x : a).d) : '')}
     </div>`;
+    h += `<div id="nightRep"></div>`;
     const chron = list.slice().reverse();
     h += `<section class="rcard rchart"><h4>Hours slept vs ${state.settings.sleepTarget}h target <span>${rng}</span></h4>${barsChart(chron)}
       <div class="rleg">${['rested', 'short', 'deprived', 'over'].map(k => `<span><i style="background:${SC[k].c}"></i>${SC[k].l}</span>`).join('')}</div></section>`;
     h += `<section class="rcard rchart"><h4>Sleep bank <span>actual vs target, adding up</span></h4>${bankChart(chron)}
       <div class="rleg"><span><i style="background:${SC.rested.c}"></i>Ahead of target</span><span><i style="background:${SC.deprived.c}"></i>In sleep debt</span><span><i style="background:none;border-top:2px dashed #7b828d;border-radius:0;height:0;width:14px"></i>${state.settings.sleepTarget}h every night</span></div>
       <div class="rcap">${withM.length ? (debt > 0 ? `You're <b>${dur(Math.round(debt))}</b> behind ${state.settings.sleepTarget}h a night over these ${withM.length} nights, about <b>${dur(Math.round(debt / withM.length))}</b> a night.` : `You're <b>${dur(Math.round(-debt))}</b> ahead of ${state.settings.sleepTarget}h a night over these ${withM.length} nights.`) : 'Fills in once you have complete nights.'}</div></section>`;
-    h += `<section class="rcard rchart"><h4>When you slept <span>target ${state.settings.bed} → ${state.settings.wake}</span></h4>${windowChart(chron)}</section>`;
+    h += `<section class="rcard rchart"><h4>When you slept <span>target ${fmt(state.settings.bed)} → ${fmt(state.settings.wake)}</span></h4>${windowChart(chron)}</section>`;
     h += `<section class="rcard"><h4>Night by night <span>${rng}</span></h4>${table(list)}</section>`;
-    $('pageRep').innerHTML = h;
+    $('pageRep').innerHTML = h; renderNight('nightRep');
     $('pageRep').querySelectorAll('[data-r]').forEach(b => b.onclick = () => { rangeN = +b.dataset.r; renderReport(); });
     $('pageRep').querySelectorAll('[data-day]').forEach(b => b.onclick = () => openDay(new Date(+b.dataset.day)));
     const f = $('sfill');
     if (f) requestAnimationFrame(() => requestAnimationFrame(() => { f.style.transform = `translateY(${f.dataset.to}px)`; lastLvl = +f.dataset.to; }));
+  }
+  // ---------- one night, like Hydra's day: sleep piling up vs the ideal pace ----------
+  // Ideal pace: from your target bed time, banking sleep steadily until the target amount at your target wake time.
+  let nIdx = 0;
+  const PCOL = { ahead: '#9fb4e0', on: '#7fd6a0', slip: '#e0c089', behind: '#e48a8a' };
+  const pst = d => d > 30 ? 'ahead' : d >= -30 ? 'on' : d >= -90 ? 'slip' : 'behind';
+  function renderNight(id) {
+    const el = $(id); if (!el) return;
+    const full = nights(0).filter(x => x.m);
+    if (!full.length) { el.innerHTML = ''; return; }
+    nIdx = Math.min(nIdx, full.length - 1);
+    const x = full[nIdx], T = tgt(), s = state.settings;
+    const nm = t => (toMin(t) - 720 + 1440) % 1440;                 // minutes after noon of the night's evening
+    const tb = nm(s.bed), tw = nm(s.wake) > tb ? nm(s.wake) : nm(s.wake) + 1440, b = nm(x.bed), w = b + x.m;
+    const a0 = Math.max(0, Math.floor((Math.min(tb, b) - 60) / 60) * 60), a1 = Math.min(1440 + 600, Math.ceil((Math.max(tw, w) + 60) / 60) * 60);
+    const pace = t => t <= tb ? 0 : t >= tw ? T : (t - tb) / (tw - tb) * T, act = t => t <= b ? 0 : t >= w ? x.m : t - b;
+    const W = 340, Hh = 178, top = 14, base = Hh - 22, left = 26, ymax = Math.max(T, x.m) * 1.12;
+    const X = t => left + (t - a0) / (a1 - a0) * (W - left - 6), Y = v => base - v / ymax * (base - top);
+    let g = `<rect x="${left}" y="${Y(T + 90).toFixed(1)}" width="${W - left - 6}" height="${(Y(T - 30) - Y(T + 90)).toFixed(1)}" fill="${PCOL.on}" opacity=".08"/>`;
+    for (let v = 120; v < ymax; v += 120) g += `<line x1="${left}" x2="${W - 6}" y1="${Y(v).toFixed(1)}" y2="${Y(v).toFixed(1)}" stroke="#20252d"/><text x="${left - 4}" y="${(Y(v) + 3).toFixed(1)}" text-anchor="end" font-size="9" fill="#7b828d">${v / 60}h</text>`;
+    const step = 5, end = Math.max(w, tw);
+    for (let t = a0; t < end; t += step) {
+      const t2 = Math.min(t + step, end), c = PCOL[pst(act(t2) - pace(t2))];
+      if (t2 <= Math.min(b, tb)) continue;
+      g += `<polygon class="fadein" points="${X(t).toFixed(1)},${Y(act(t)).toFixed(1)} ${X(t2).toFixed(1)},${Y(act(t2)).toFixed(1)} ${X(t2).toFixed(1)},${Y(pace(t2)).toFixed(1)} ${X(t).toFixed(1)},${Y(pace(t)).toFixed(1)}" fill="${c}" opacity=".38"/>`;
+    }
+    g += `<polyline points="${X(a0)},${Y(0)} ${X(tb).toFixed(1)},${Y(0)} ${X(tw).toFixed(1)},${Y(T).toFixed(1)} ${X(a1)},${Y(T).toFixed(1)}" fill="none" stroke="#7b828d" stroke-width="1.6" stroke-dasharray="5 4"/>`;
+    g += `<text x="${(X(tw) + 4).toFixed(1)}" y="${(Y(T) - 5).toFixed(1)}" font-size="9.5" fill="#7b828d"${X(tw) > W - 70 ? ' text-anchor="end"' : ''}>${s.sleepTarget}h by ${fmtS(s.wake)}</text>`;
+    g += `<defs><filter id="ngl${id}" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="2.8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <linearGradient id="nlg${id}" x1="0" x2="1"><stop offset="0" stop-color="#8fa3c7"/><stop offset="1" stop-color="${PCOL[pst(x.m - T)]}"/></linearGradient></defs>`;
+    g += `<polyline class="draw" points="${X(a0)},${Y(0)} ${X(b).toFixed(1)},${Y(0)} ${X(w).toFixed(1)},${Y(x.m).toFixed(1)} ${X(a1)},${Y(x.m).toFixed(1)}" fill="none" stroke="url(#nlg${id})" stroke-width="2.8" stroke-linejoin="round" filter="url(#ngl${id})"/>`;
+    g += `<circle cx="${X(b).toFixed(1)}" cy="${Y(0)}" r="4.5" fill="#8fa3c7" stroke="#0b0d10" stroke-width="1.5"/><text x="${X(b).toFixed(1)}" y="${Y(0) - 9}" text-anchor="middle" font-size="12">🌙</text>`;
+    g += `<circle cx="${X(w).toFixed(1)}" cy="${Y(x.m).toFixed(1)}" r="5" fill="${PCOL[pst(x.m - T)]}" stroke="#0b0d10" stroke-width="1.5"/><text x="${X(w).toFixed(1)}" y="${(Y(x.m) - 10).toFixed(1)}" text-anchor="middle" font-size="12">☀️</text>`;
+    for (let t = Math.ceil(a0 / 120) * 120; t <= a1; t += 120) { const h = (Math.round(t / 60) + 12) % 24; g += `<text x="${X(t).toFixed(1)}" y="${Hh - 6}" text-anchor="middle" font-size="9.5" fill="#7b828d">${hr12(h)}</text>`; }
+    g += `<line x1="${left}" x2="${W - 6}" y1="${base}" y2="${base}" stroke="#262b33"/>`;
+    const late = b - tb, early = w - tw, gap = x.m - T, st = pst(gap);
+    const dur = m => m < 60 ? `${Math.round(m)}m` : `${Math.floor(m / 60)}h ${pad(Math.round(m % 60))}m`;
+    const story = `${late > 10 ? `Bed <b>${dur(late)}</b> after your ${fmt(s.bed)} target, so you started behind pace.` : late < -10 ? `Bed <b>${dur(-late)}</b> before your target, a head start.` : 'Bed right on target.'} ${early < -10 ? `Woke <b>${dur(-early)}</b> before ${fmt(s.wake)}` : early > 10 ? `Slept <b>${dur(early)}</b> past ${fmt(s.wake)}` : `Woke on time`} and finished at <b>${dur(x.m)}</b> (<b style="color:${PCOL[st]}">${gap >= 0 ? '+' : '−'}${dur(Math.abs(gap))}</b> vs ${s.sleepTarget}h).`;
+    const lbl = keyOf(x.d) === keyOf(new Date()) ? 'Last night' : `Night ending ${DOWS[x.d.getDay()]} ${x.d.getDate()} ${MON3[x.d.getMonth()]}`;
+    el.innerHTML = `<section class="ncard"><div class="nhd"><div><div class="k">${lbl} · vs ideal pace</div><div class="v">${fmt(x.bed)} → ${fmt(x.wake)}</div><div class="k" style="text-transform:none;letter-spacing:0;margin-top:2px">${dur(x.m)} slept</div></div>
+      <div class="nnav"><button data-nv="1" ${nIdx >= full.length - 1 ? 'disabled' : ''} aria-label="Earlier night">‹</button><button data-nv="-1" ${nIdx === 0 ? 'disabled' : ''} aria-label="Later night">›</button></div></div>
+      <svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="Sleep built up through the night against the ideal pace">${g}</svg>
+      <div class="rleg"><span><i style="background:${PCOL.ahead}"></i>Ahead</span><span><i style="background:${PCOL.on}"></i>On pace</span><span><i style="background:${PCOL.slip}"></i>Slipping</span><span><i style="background:${PCOL.behind}"></i>Behind</span><span><i style="background:none;border-top:2px dashed #7b828d;border-radius:0;height:0;width:14px"></i>Ideal pace</span></div>
+      <div class="rcap">${story}</div></section>`;
+    el.querySelectorAll('[data-nv]').forEach(btn => btn.onclick = () => { nIdx = Math.max(0, nIdx + +btn.dataset.nv); snd('tap'); renderNight('nightLog'); renderNight('nightRep'); });
   }
   const kp = (k, v, s) => `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div><div class="k" style="margin-top:2px;color:var(--faint)">${s}</div></div>`;
   const dayLbl = d => `${DOWS[d.getDay()]} ${d.getDate()} ${MON3[d.getMonth()]}`;
@@ -645,7 +759,7 @@
       const X = i * bw + bw * .18, w = bw * .64;
       if (x.m) {
         const yy = Y(x.m);
-        g += `<rect x="${X.toFixed(1)}" y="${yy.toFixed(1)}" width="${w.toFixed(1)}" height="${(base - yy).toFixed(1)}" rx="${Math.min(4, w / 2).toFixed(1)}" fill="${SC[sstat(x.m)].c}"/>`;
+        g += `<rect x="${X.toFixed(1)}" y="${yy.toFixed(1)}" width="${w.toFixed(1)}" height="${(base - yy).toFixed(1)}" rx="${Math.min(4, w / 2).toFixed(1)}" fill="${SC[sstat(x.m)].c}" class="gbar" style="animation-delay:${i * 35}ms"/>`;
         if (n <= 16) g += `<text x="${(X + w / 2).toFixed(1)}" y="${(yy - 4).toFixed(1)}" text-anchor="middle" font-size="9.5" fill="#d6d9de">${hrs(x.m)}</text>`;
       } else g += `<rect x="${X.toFixed(1)}" y="${base - 3}" width="${w.toFixed(1)}" height="3" rx="1.5" fill="#2a2f37"/>`;
       if (n <= 7 || i % Math.ceil(n / 10) === 0) g += `<text x="${(X + w / 2).toFixed(1)}" y="${Hh - 5}" text-anchor="middle" font-size="9.5" fill="#7b828d">${n <= 7 ? DOWS[x.d.getDay()] : x.d.getDate()}</text>`;
@@ -669,10 +783,11 @@
     const P = [{ a: 0, t: 0 }, ...pts], XX = i => i === 0 ? left : X(i - 1);
     for (let i = 1; i < P.length; i++) {
       const p0 = P[i - 1], p1 = P[i], c = p1.a >= p1.t - 30 ? SC.rested.c : SC.deprived.c;
-      g += `<polygon points="${XX(i - 1).toFixed(1)},${Y(p0.a).toFixed(1)} ${XX(i).toFixed(1)},${Y(p1.a).toFixed(1)} ${XX(i).toFixed(1)},${Y(p1.t).toFixed(1)} ${XX(i - 1).toFixed(1)},${Y(p0.t).toFixed(1)}" fill="${c}" opacity=".35"/>`;
+      g += `<polygon points="${XX(i - 1).toFixed(1)},${Y(p0.a).toFixed(1)} ${XX(i).toFixed(1)},${Y(p1.a).toFixed(1)} ${XX(i).toFixed(1)},${Y(p1.t).toFixed(1)} ${XX(i - 1).toFixed(1)},${Y(p0.t).toFixed(1)}" fill="${c}" opacity=".35" class="fadein"/>`;
     }
     g += `<polyline points="${P.map((p, i) => `${XX(i).toFixed(1)},${Y(p.t).toFixed(1)}`).join(' ')}" fill="none" stroke="#7b828d" stroke-width="1.6" stroke-dasharray="5 4"/>`;
-    g += `<polyline points="${P.map((p, i) => `${XX(i).toFixed(1)},${Y(p.a).toFixed(1)}`).join(' ')}" fill="none" stroke="#c9d4ea" stroke-width="2.2" stroke-linejoin="round"/>`;
+    g += `<defs><filter id="bkg" x="-10%" y="-30%" width="120%" height="160%"><feGaussianBlur stdDeviation="2.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>`;
+    g += `<polyline class="draw" points="${P.map((p, i) => `${XX(i).toFixed(1)},${Y(p.a).toFixed(1)}`).join(' ')}" fill="none" stroke="#c9d4ea" stroke-width="2.4" stroke-linejoin="round" filter="url(#bkg)"/>`;
     pts.forEach((p, i) => { g += `<circle cx="${X(i).toFixed(1)}" cy="${Y(p.a).toFixed(1)}" r="3" fill="${SC[sstat(p.x.m)].c}" stroke="#0b0d10" stroke-width="1.2"/>`;
       const kk = Math.ceil(n / 7); if (n <= 7 || i === n - 1 || (i % kk === 0 && i < n - 1 - kk / 2)) g += `<text x="${X(i).toFixed(1)}" y="${Hh - 5}" text-anchor="${i === n - 1 ? 'end' : 'middle'}" font-size="9.5" fill="#7b828d">${n <= 7 ? DOWS[p.x.d.getDay()] : p.x.d.getDate() + ' ' + MON3[p.x.d.getMonth()]}</text>`; });
     const last = pts[n - 1], gap = last.a - last.t;
@@ -690,7 +805,7 @@
     const xm = t => { const m = (toMin(t) - BASE + 1440) % 1440; return left + Math.min(m, SPAN) / SPAN * (W - left - 4); };
     let g = `<rect x="${xm(state.settings.bed).toFixed(1)}" y="${top - 2}" width="${(xm(state.settings.wake) - xm(state.settings.bed)).toFixed(1)}" height="${rows.length * rh + 4}" fill="#8fa3c7" opacity=".08"/>`;
     ['18:00', '20:00', '22:00', '00:00', '02:00', '04:00', '06:00', '08:00'].forEach(t => {
-      g += `<line x1="${xm(t).toFixed(1)}" x2="${xm(t).toFixed(1)}" y1="${top - 2}" y2="${top + rows.length * rh}" stroke="#20252d"/><text x="${xm(t).toFixed(1)}" y="${Hh - 6}" text-anchor="middle" font-size="9" fill="#7b828d">${t.slice(0, 2)}</text>`;
+      g += `<line x1="${xm(t).toFixed(1)}" x2="${xm(t).toFixed(1)}" y1="${top - 2}" y2="${top + rows.length * rh}" stroke="#20252d"/><text x="${xm(t).toFixed(1)}" y="${Hh - 6}" text-anchor="middle" font-size="9" fill="#7b828d">${hr12(+t.slice(0, 2))}</text>`;
     });
     rows.forEach((x, i) => {
       const y = top + i * rh, c = x.m ? SC[sstat(x.m)].c : '#4a5059';
@@ -711,19 +826,21 @@
       const r = roll7(x.d), s = sstat(x.m);
       return `<tr class="${x.m ? '' : 'miss'}" data-day="${x.d.getTime()}">
         <td class="sn">${i + 1}</td><td>${pad(x.d.getDate())} ${MON3[x.d.getMonth()]}</td><td>${DOWS[x.d.getDay()]}</td>
-        <td>${x.bed || '—'}</td><td>${x.wake || '—'}</td>
+        <td>${x.bed ? fmt(x.bed) : '—'}</td><td>${x.wake ? fmt(x.wake) : '—'}</td>
         <td class="dur">${x.m ? `<i style="background:${SC[s].c}"></i>${dur(x.m)}` : '—'}</td>
         <td>${r ? hrs(r) + 'h' : '—'}</td></tr>`;
     }).join('');
     const bAvg = avgClock(ns.map(x => x.bed).filter(Boolean), state.settings.bed), wAvg = avgClock(ns.map(x => x.wake).filter(Boolean), state.settings.wake);
     return `<div class="tblw"><table class="stbl"><thead><tr><th>S.No</th><th>Date</th><th>Day</th><th>Bed</th><th>Wake</th><th>Slept</th><th>7N avg</th></tr></thead>
-      <tbody>${rows}<tr class="avg"><td></td><td colspan="2">Average</td><td>${bAvg || '—'}</td><td>${wAvg || '—'}</td><td>${avgM ? dur(avgM) : '—'}</td><td></td></tr></tbody></table></div>
+      <tbody>${rows}<tr class="avg"><td></td><td colspan="2">Average</td><td>${bAvg ? fmt(bAvg) : '—'}</td><td>${wAvg ? fmt(wAvg) : '—'}</td><td>${avgM ? dur(avgM) : '—'}</td><td></td></tr></tbody></table></div>
       <div class="note">Each row is the morning you woke up; Bed is the night before. 7N avg is the average of that night and the 6 before it. Tap a row to fix its times.</div>`;
   }
 
   function showPage(p) {
+    if (p !== page) snd('tab');
     page = p;
     $('pageLog').hidden = p !== 'log'; $('pageRep').hidden = p !== 'rep';
+    const el = $(p === 'log' ? 'pageLog' : 'pageRep'); el.classList.remove('pg-l', 'pg-r'); void el.offsetWidth; el.classList.add(p === 'log' ? 'pg-l' : 'pg-r');
     $('tabLog').classList.toggle('on', p === 'log'); $('tabRep').classList.toggle('on', p === 'rep');
     if (p === 'rep') { lastLvl = null; renderReport(); }
     window.scrollTo(0, 0);
@@ -732,7 +849,7 @@
   $('tabRep').onclick = () => showPage('rep');
 
   // ---------- sheets ----------
-  function openSheet(html) { $('sheet').innerHTML = html; document.body.classList.add('open'); }
+  function openSheet(html) { $('sheet').innerHTML = html; document.body.classList.add('open'); snd('sheet'); }
   function closeSheet() { document.body.classList.remove('open'); }
   $('scrim').onclick = closeSheet;
 
@@ -753,11 +870,11 @@
       const w = $('dW').value, b = $('dB').value;
       if (w || b) state.entries[k] = { ...(w && { wake: w }), ...(b && { bed: b }) };
       else delete state.entries[k];
-      save(); closeSheet(); render(); toast('Saved');
+      save(); closeSheet(); render(); snd('save'); toast('Saved');
     };
     $('dClear').onclick = () => {
       if (!confirm('Remove both times for this day?')) return;
-      delete state.entries[k]; save(); closeSheet(); render(); toast('Cleared');
+      delete state.entries[k]; save(); closeSheet(); render(); snd('del'); toast('Cleared');
     };
   }
 
@@ -770,6 +887,7 @@
       <div class="field"><label>Target bed time</label><input type="time" id="sB" value="${s.bed}"></div>
       <div class="field"><label>Counts as on time within</label><select id="sWin">${opts}</select></div>
       <div class="field"><label>Sleep target</label><select id="sTgt">${[6, 6.5, 7, 7.5, 8, 8.5, 9].map(h => `<option value="${h}"${h === (s.sleepTarget || 8) ? ' selected' : ''}>${h} hours</option>`).join('')}</select></div>
+      <div class="sndrow"><label style="color:var(--muted);font-size:14px">Sound effects</label><label class="switch"><input type="checkbox" id="sSnd" ${s.sound ? 'checked' : ''}><span></span></label></div>
       <div class="actions"><button class="btn primary" id="sSave">Save targets</button></div>
       <div class="actions">
         <button class="btn" id="exp">Export backup</button>
@@ -779,8 +897,9 @@
       <div class="note">Your data lives only on this phone. Export a backup now and then — clearing browser data would erase it.</div>`);
     $('sSave').onclick = () => {
       s.wake = $('sW').value || s.wake; s.bed = $('sB').value || s.bed; s.windowMin = +$('sWin').value; s.sleepTarget = +$('sTgt').value;
-      save(); closeSheet(); render(); toast('Targets updated');
+      save(); closeSheet(); render(); snd('save'); toast('Targets updated');
     };
+    $('sSnd').onchange = ev => { s.sound = ev.target.checked; save(); snd('tap'); };
     $('exp').onclick = exportData;
     $('imp').onclick = () => $('impFile').click();
     $('impFile').onchange = ev => importData(ev.target.files[0]);
@@ -813,13 +932,14 @@
   // ---------- misc ----------
   let tt;
   function toast(msg) { const t = $('toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => t.classList.remove('show'), 1800); }
-  function tick() { $('clock').textContent = hm(new Date()); }
+  function tick() { $('clock').textContent = fmt(hm(new Date())); }
 
   $('wakeBtn').onclick = () => logNow('wake');
   $('bedBtn').onclick = () => logNow('bed');
-  $('targetToggle').onchange = e => { state.settings.showTargets = e.target.checked; save(); render(); };
-  $('prevM').onclick = () => { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); };
-  $('nextM').onclick = () => { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); };
+  $('targetToggle').onchange = e => { state.settings.showTargets = e.target.checked; save(); render(); snd('tap'); };
+  const slideCal = () => { const g = $('grid'); g.classList.remove('sl'); void g.offsetWidth; g.classList.add('sl'); snd('tap'); };
+  $('prevM').onclick = () => { view = new Date(view.getFullYear(), view.getMonth() - 1, 1); render(); slideCal(); };
+  $('nextM').onclick = () => { view = new Date(view.getFullYear(), view.getMonth() + 1, 1); render(); slideCal(); };
   $('settingsBtn').onclick = openSettings;
   document.addEventListener('visibilitychange', () => { if (!document.hidden) { tick(); render(); } });
 
